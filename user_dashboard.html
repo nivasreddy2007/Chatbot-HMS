@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F5F7FA;
+            --success-color: #2ECC71;
+            --error-color: #E74C3C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .appointment-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .appointment-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--error-color);
+            transform: rotate(90deg);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #357ABD;
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            display: none;
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            display: none;
+            background-color: var(--error-color);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Dialogflow messenger styles */
+        df-messenger {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="appointment-container">
+        <button class="close-btn" onclick="closeForm()">&times;</button>
+        <h2>Book an Appointment</h2>
+        
+        <form id="appointmentForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="time">Time</label>
+                <input type="time" id="time" name="time" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Book Appointment</button>
+        </form>
+        
+        <div class="success-message">
+            Appointment booked successfully! Check your email for confirmation.
+        </div>
+        
+        <div class="error-message">
+            An error occurred. Please try again.
+        </div>
+    </div>
+
+    <!-- Dialogflow Chatbot -->
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+        chat-icon="https://www.google.com/imgres?q=%20chatbot&ampimgurl=https%3A%2F%2Fimg.freepik.com%2Ffree-vector%2Fchatbot-chat-message-vectorart_78370-4104.jpg"
+        chat-title="HospitalManagementBot"
+        agent-id="ed3287f7-b38f-4278-b5ae-9704864d9bce"
+        language-code="en">
+    </df-messenger>
+
+    <script>
+        // Set minimum date to today
+        const dateInput = document.getElementById('date');
+        const timeInput = document.getElementById('time');
+        
+        // Set minimum date
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+        
+        // Handle form submission
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('/book-appointment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('.success-message');
+                    event.target.reset();
+                } else {
+                    showMessage('.error-message');
+                }
+            } catch (error) {
+                showMessage('.error-message');
+            }
+        }
+        
+        function showMessage(selector) {
+            const message = document.querySelector(selector);
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+        
+        function closeForm() {
+            window.location.href = '/dashboard';
+        }
+        
+        // Validate time based on selected date
+        function validateDateTime() {
+            const selectedDate = new Date(dateInput.value);
+            const selectedTime = timeInput.value;
+            const now = new Date();
+            
+            if (selectedDate.toDateString() === now.toDateString()) {
+                const currentHour = now.getHours();
+                const currentMinutes = now.getMinutes();
+                const [selectedHour, selectedMinutes] = selectedTime.split(':').map(Number);
+                
+                if (selectedHour < currentHour || 
+                    (selectedHour === currentHour && selectedMinutes <= currentMinutes)) {
+                    timeInput.value = '';
+                    alert('Please select a future time');
+                }
+            }
+        }
+        
+        dateInput.addEventListener('change', validateDateTime);
+        timeInput.addEventListener('change', validateDateTime);
+    </script>
+</body>
+</html>
