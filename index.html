@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F5F7FA;
+            --accent-color: #34495E;
+            --text-color: #2C3E50;
+            --light-gray: #ECF0F1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Added underline hover effect for navbar links */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .login-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #357ABD;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 70vh;
+            background: linear-gradient(rgba(74, 144, 226, 0.1), rgba(74, 144, 226, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        /* Sections */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+        }
+
+        /* About Section - Card Format */
+        .about-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            background-color: #f8f9fa;
+        }
+
+        .about-content {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .about-feature {
+            flex: 1;
+            text-align: center;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .about-feature:hover {
+            transform: translateY(-8px);
+            background-color: #83b2e2;
+            color: white;
+            border-radius: 10px;
+        }
+        .about-feature:hover .about-icon {
+            color: white !important;
+            }
+
+        .about-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .about-feature h3 {
+            margin-bottom: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            align-content: center;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            /* background-color: #f8f9fa; */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            background-color: #83b2e2;
+            color: white;
+        }
+
+        /* Form Styles */
+        .query-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        /* Login Form */
+        .login-form {
+            display: none;
+            max-width: 400px;
+            margin: 6rem auto 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .login-form.active {
+            display: block;
+        }
+
+        /* Blog Section Styles - Modified for image placement */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background-color: var(--light-gray);
+            position: relative;
+        }
+
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-content h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .blog-content p {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            flex-grow: 1;
+        }
+
+        .read-more {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: auto;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .service-card:hover .service-icon {
+        color: white !important;
+        }
+        
+       
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">HMS</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#blogs">Blogs</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <a href="{{ url_for('login') }}"><button class="login-btn" onclick="toggleLogin()">Login</button></a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Welcome to Hospital Management System</h1>
+            <p>Providing Quality Healthcare Services</p>
+        </div>
+    </section>
+
+    <!-- About Section with Card Format and Font Awesome icons -->
+    <section id="about">
+        <h2 class="section-title">About Us</h2>
+        <div class="about-card">
+           
+            
+            <div class="about-content">
+                <div class="about-feature">
+                    <i class="fas fa-heartbeat about-icon"></i>
+                    <h3>Patient-Centered Care</h3>
+                    <p>We put patients first, ensuring personalized care and treatment plans for everyone's unique needs.</p>
+                </div>
+                
+                <div class="about-feature">
+                    <i class="fas fa-stethoscope about-icon"></i>
+                    <h3>Expert Medical Team</h3>
+                    <p>Our hospital is staffed with experienced medical professionals dedicated to providing the highest quality care.</p>
+                </div>
+                
+                <div class="about-feature">
+                    <i class="fas fa-microscope about-icon"></i>
+                    <h3>Advanced Technology</h3>
+                    <p>We utilize cutting-edge medical technology and equipment to ensure accurate diagnoses and effective treatments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section with enhanced styling -->
+    <section id="services">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3><i class="fas fa-ambulance service-icon"></i><br> Emergency Care</h3><br>
+                <p>Our 24/7 emergency care unit is fully equipped to handle critical medical situations with speed and efficiency. We have a dedicated team of emergency physicians, trauma specialists, and paramedics ready to provide immediate medical attention.</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-user-md service-icon"></i> <br>Specialized Treatment</h3><br>
+                <p>We provide specialized treatment across a wide range of medical fields, ensuring expert care for every patient. Our team of highly qualified doctors and specialists offers customized treatment plans in areas such as cardiology, neurology, orthopedics, oncology, gastroenterology, and more.</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-flask service-icon"></i><br> Laboratory Services</h3><br>
+                <p>Our hospital is equipped with state-of-the-art laboratory services to provide accurate and timely diagnostic results. We offer a comprehensive range of tests, including blood work, imaging, pathology, and microbiology, ensuring precise diagnosis and effective treatment.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blogs Section with structured image layout -->
+    <section id="blogs">
+        <h2 class="section-title">Latest Health Blogs</h2>
+        <div class="blog-grid">
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="https://img.freepik.com/free-photo/close-up-doctor-with-stethoscope_23-2149191355.jpg?semt=ais_hybrid" alt="Mental Health">
+                </div>
+                <div class="blog-content">
+                    <h3>Understanding Mental Health</h3>
+                    <p>Learn about the importance of mental health and ways to maintain it in today's fast-paced world.</p>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </div>
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="https://www.shutterstock.com/image-photo/medical-technology-doctor-use-ai-600nw-2304284475.jpg" alt="Healthy Living">
+                </div>
+                <div class="blog-content">
+                    <h3>Healthy Living Tips</h3>
+                    <p>Discover simple yet effective tips for maintaining a healthy lifestyle and preventing common diseases.</p>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </div>
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="https://www.cgg.gov.in/wp-content/uploads/2017/10/hospital.jpg" alt="Medical Breakthroughs">
+                </div>
+                <div class="blog-content">
+                    <h3>Medical Breakthroughs</h3>
+                    <p>Stay updated with the latest medical advancements and breakthrough treatments in healthcare.</p>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Query Form -->
+    <section id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <form class="query-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="login-btn">Submit</button>
+        </form>
+    </section>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <h2>Welcome to your Dashboard</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3><i class="fas fa-calendar-check"></i> Appointments</h3>
+                <p>View and manage your appointments</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-file-medical"></i> Medical Records</h3>
+                <p>Access your medical history</p>
+            </div>
+            <div class="service-card">
+                <h3><i class="fas fa-prescription"></i> Prescriptions</h3>
+                <p>View your prescriptions</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialogflow Chatbot -->
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+        chat-icon="https://www.google.com/imgres?q=%20chatbot&ampimgurl=https%3A%2F%2Fimg.freepik.com%2Ffree-vector%2Fchatbot-chat-message-vectorart_78370-4104.jpg&ampimgrefurl=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fchatbot-background&ampdocid=FWxwseBhgXoFxM&amptbnid=mf30EWnjlMSRyM&ampvet=12ahUKEwjO-_bmvLaLAxUNRWcHHaUnEDkQM3oECG0QAA..i&ampw=626&amph=626&amphcb=2&ampved=2ahUKEwjO-_bmvLaLAxUNRWcHHaUnEDkQM3oECG0QAA"
+        chat-title="HospitalManagementBot"
+        agent-id="ed3287f7-b38f-4278-b5ae-9704864d9bce"
+        language-code="en">
+    </df-messenger>
+
+    <script>
+        // Toggle Login Form
+        function toggleLogin() {
+            const loginForm = document.getElementById('loginForm');
+            loginForm.classList.toggle('active');
+        }
+
+        // Handle Login
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simple validation (in real app, this would connect to a backend)
+            if (username && password) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+            }
+        }
+       
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        function redirectToLogin() {
+            window.location.href = '/login';
+        }
+    </script>
+</body>
+</html>
